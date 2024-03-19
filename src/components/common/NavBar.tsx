@@ -1,13 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { X, AlignJustify } from "lucide-react";
 
 function NavBar() {
     const [menu, setMenu] = useState(false);
+    const [showNavBar, setShowNavBar] = useState(false);
+
     const toggleMenu = () => {
         setMenu(!menu);
     };
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const isTop = window.scrollY < 100;
+            setShowNavBar(!isTop);
+        };
+
+        window.addEventListener("scroll", handleScroll);
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
+    }, []);
 
     const links = [
         {
@@ -33,8 +48,12 @@ function NavBar() {
     ];
 
     return (
-        <div className="md:fixed md:top-0 w-full md:shadow-none z-20 ">
-            <div className=" hidden lg:block animate-in fade-in zoom-in bg-white p-4 bg-opacity-90 shadow-lg">
+        <div
+            className={`md:fixed w-full z-20 md:shadow-md transition-all duration-300 ease-in-out ${
+                showNavBar ? "" : "hidden"
+            }`}
+        >
+            <div className=" hidden lg:block animate-in fade-in zoom-in bg-white p-4 shadow-lg">
                 <div className="flex justify-between md:mx-[9rem] items-center">
                     <div>
                         <h1 className="text-3xl">
